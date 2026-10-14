@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // En environnement iframe sandboxé (AI Studio), neutraliser les tentatives WebSocket de Vite HMR
+      (function() {
+        const NativeWebSocket = window.WebSocket;
+        window.WebSocket = function(url, protocols) {
+          const isViteHmr = typeof url === 'string' && (url.includes('vite') || url.includes('24678') || (protocols && (protocols === 'vite-hmr' || protocols === 'vite-ping')));
+          if (isViteHmr) {
+            const fakeWs = {
+              readyState: 1, // OPEN
+              send: function() {},
+              close: function() {},
+              addEventListener: function(event, callback) {
+                if (event === 'open') {
+                  setTimeout(() => callback({ type: 'open' }), 0);
+                }
+              },
+              removeEventListener: function() {},
+              dispatchEvent: function() { return true; }
+            };
+            return fakeWs;
+          }
+          return new NativeWebSocket(url, protocols);
+        };
+        if (NativeWebSocket) {
+          window.WebSocket.CONNECTING = NativeWebSocket.CONNECTING;
+          window.WebSocket.OPEN = NativeWebSocket.OPEN;
+          window.WebSocket.CLOSING = NativeWebSocket.CLOSING;
+          window.WebSocket.CLOSED = NativeWebSocket.CLOSED;
+          window.WebSocket.prototype = NativeWebSocket.prototype;
+        }
+      })();
+    </script>
+    <title>FIRE AGENT | Plateforme de Cybersécurité Multi-Agents</title>
+    <meta name="description" content="Système de cybersécurité multi-agents collaboratif pour la détection, l'évaluation et la réponse contrôlée aux incidents en environnement de simulation sécurisé." />
+    <meta property="og:title" content="FIRE AGENT | Plateforme de Cybersécurité Multi-Agents" />
+    <meta property="og:description" content="Système de cybersécurité multi-agents collaboratif pour la détection, l'évaluation et la réponse contrôlée aux incidents en environnement de simulation sécurisé." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#F4F9FF] text-[#172B4D] antialiased selection:bg-[#38A8FF] selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

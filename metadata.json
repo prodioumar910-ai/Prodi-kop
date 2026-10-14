@@ -1,0 +1,6 @@
+{
+  "name": "FIRE AGENT",
+  "description": "Plateforme de cybersécurité multi-agents autonome et collaborative pour la détection, l'évaluation et la réponse contrôlée aux menaces (Prototype de démonstration sécurisé).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
